@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'views/main_screen.dart';
 import 'viewmodels/home_viewmodel.dart';
 import 'viewmodels/draft_viewmodel.dart';
-import 'data/app_database.dart';
 import 'theme/app_colors.dart';
 
 void main() async {
@@ -15,15 +14,12 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  final db = AppDatabase();
   final prefs = await SharedPreferences.getInstance();
   final isDark = prefs.getBool('isDarkMode') ?? false;
 
   runApp(
     MultiProvider(
       providers: [
-        Provider(create: (_) => db),
         ChangeNotifierProvider(create: (_) => HomeViewModel(initialDarkMode: isDark)),
         ChangeNotifierProvider(create: (_) => DraftViewModel()),
       ],
