@@ -42,11 +42,10 @@ class DraftsViewModel extends ChangeNotifier {
     final entry = _drafts[index];
     final uri = Uri.parse('https://jsonplaceholder.typicode.com/posts');
     try {
-      final response = await http.post(uri, body: {
-        'name': entry.name,
-        'email': entry.email,
-        'phone': entry.phone,
-      });
+      final response = await http.post(
+        uri,
+        body: {'name': entry.name, 'email': entry.email, 'phone': entry.phone},
+      );
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (_) {
       return false;

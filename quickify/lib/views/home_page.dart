@@ -65,8 +65,9 @@ class _HomePageState extends State<HomePage> {
       } else {
         model.add(entry);
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Saved')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Saved')));
       _formKey.currentState?.reset();
       _loadData(null);
     }
@@ -141,10 +142,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: _save,
-                    child: const Text('Save'),
-                  ),
+                  ElevatedButton(onPressed: _save, child: const Text('Save')),
                 ],
               ),
             ),

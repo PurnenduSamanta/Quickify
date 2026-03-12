@@ -37,7 +37,9 @@ class MyApp extends StatelessWidget {
       primaryColor: AppColors.lightPrimary,
       scaffoldBackgroundColor: AppColors.lightBackground,
       appBarTheme: const AppBarTheme(backgroundColor: AppColors.lightPrimary),
-      textTheme: const TextTheme(bodyMedium: TextStyle(color: AppColors.lightText)),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: AppColors.lightText),
+      ),
     );
 
     final dark = ThemeData(
@@ -45,7 +47,9 @@ class MyApp extends StatelessWidget {
       primaryColor: AppColors.darkPrimary,
       scaffoldBackgroundColor: AppColors.darkBackground,
       appBarTheme: const AppBarTheme(backgroundColor: AppColors.darkPrimary),
-      textTheme: const TextTheme(bodyMedium: TextStyle(color: AppColors.darkText)),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: AppColors.darkText),
+      ),
     );
 
     return MaterialApp(
@@ -56,5 +60,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

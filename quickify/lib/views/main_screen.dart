@@ -21,10 +21,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = <Widget>[
-      const HomePage(),
-      DraftPage(onEdit: _switchToHome),
-    ];
+    final pages = <Widget>[const HomePage(), DraftPage(onEdit: _switchToHome)];
 
     return Scaffold(
       body: pages[_currentIndex],
@@ -36,14 +33,8 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Draft',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Draft'),
         ],
       ),
     );
