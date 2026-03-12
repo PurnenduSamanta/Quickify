@@ -1,5 +1,5 @@
 name: quickify
-description: "A new Flutter project."
+description: "Quickify application"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -35,6 +35,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Added packages
+  provider: ^6.0.5
+  shared_preferences: ^2.1.1
+  connectivity_plus: ^4.0.1
+  image_picker: ^0.8.7+5
+  http: ^0.13.6
+  path_provider: ^2.0.15
+  drift: ^2.7.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,6 +54,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+  # Development tools
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.2.24
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
