@@ -4,6 +4,8 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import 'draft_dao.dart';
+
 part 'app_database.g.dart';
 
 class Drafts extends Table {
@@ -23,6 +25,9 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  // DAOs
+  late final DraftDao draftDao = DraftDao(this);
 }
 
 LazyDatabase _openConnection() {

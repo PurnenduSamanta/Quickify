@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../data/app_database.dart';
+import '../data/draft_dao.dart';
 import 'package:http/http.dart' as http;
 
 class DraftViewModel extends ChangeNotifier {
-  final AppDatabase _db;
+  final DraftDao _dao;
   List<Draft> _drafts = [];
   int? _editingIndex;
 
-  DraftViewModel(this._db) {
+  DraftViewModel(AppDatabase db) : _dao = db.draftDao {
     _loadDrafts();
   }
 
   Future<void> _loadDrafts() async {
-    _drafts = await _db.select(_db.drafts).get();
+    _drafts = await _dao.getAll();
     notifyListeners();
   }
 
@@ -33,14 +34,13 @@ class DraftViewModel extends ChangeNotifier {
   }
 
   Future<void> add(Draft data) async {
-    final companion = data.toCompanion(true);
-    await _db.into(_db.drafts).insert(companion);
+    await _dao.insertDraft(data);
     await _loadDrafts();
   }
 
   Future<void> update(Draft data) async {
     if (_editingIndex == null) return;
-    await _db.update(_db.drafts).replace(data);
+    await _dao.updateDraft(data);
     _editingIndex = null;
     await _loadDrafts();
   }
@@ -48,7 +48,7 @@ class DraftViewModel extends ChangeNotifier {
   Future<void> delete(int index) async {
     if (index < 0 || index >= _drafts.length) return;
     final id = _drafts[index].id;
-    await (_db.delete(_db.drafts)..where((t) => t.id.equals(id))).go();
+    await _dao.deleteDraft(id);
     if (_editingIndex == index) _editingIndex = null;
     await _loadDrafts();
   }
