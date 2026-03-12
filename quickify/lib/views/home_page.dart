@@ -69,8 +69,9 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Saved')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Saved')));
       _formKey.currentState?.reset();
       _loadData(null);
     }
