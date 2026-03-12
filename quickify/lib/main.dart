@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'views/main_screen.dart';
-import 'viewmodels/drafts_viewmodel.dart';
-import 'viewmodels/theme_viewmodel.dart';
+import 'viewmodels/home_viewmodel.dart';
+import 'viewmodels/draft_viewmodel.dart';
+import 'data/app_database.dart';
 import 'theme/app_colors.dart';
 
 void main() async {
@@ -14,11 +15,14 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  final db = AppDatabase();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DraftsViewModel()),
-        ChangeNotifierProvider(create: (_) => ThemeViewModel()),
+        Provider(create: (_) => db),
+        ChangeNotifierProvider(create: (_) => HomeViewModel(db)),
+        ChangeNotifierProvider(create: (_) => DraftViewModel(db)),
       ],
       child: const MyApp(),
     ),
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeModel = Provider.of<ThemeViewModel>(context);
+    final homeModel = Provider.of<HomeViewModel>(context);
 
     final light = ThemeData(
       brightness: Brightness.light,
@@ -55,7 +59,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quickify',
-      theme: themeModel.isDark ? dark : light,
+      theme: homeModel.isDark ? dark : light,
       home: const MainScreen(),
     );
   }

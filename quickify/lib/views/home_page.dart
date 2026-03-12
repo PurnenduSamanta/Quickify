@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../models/form_data.dart';
-import '../viewmodels/drafts_viewmodel.dart';
-import '../viewmodels/theme_viewmodel.dart';
+import '../data/app_database.dart';
+import '../viewmodels/draft_viewmodel.dart';
+import '../viewmodels/home_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,9 +21,9 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _phoneCtrl = TextEditingController();
   String? _imagePath;
-  FormData? _currentData;
+  Draft? _currentData;
 
-  void _loadData(FormData? data) {
+  void _loadData(Draft? data) {
     if (data == null) {
       _nameCtrl.clear();
       _emailCtrl.clear();
@@ -47,27 +47,30 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final model = Provider.of<DraftsViewModel>(context, listen: false);
-      final id = model.isEditing
-          ? model.editingData!.id
+      final draftModel = Provider.of<DraftViewModel>(context, listen: false);
+
+      final id = draftModel.isEditing
+          ? draftModel.editingData!.id
           : DateTime.now().toIso8601String();
-      final entry = FormData(
+      final entry = Draft(
         id: id,
         name: _nameCtrl.text,
         email: _emailCtrl.text,
         phone: _phoneCtrl.text,
         imagePath: _imagePath,
       );
-      if (model.isEditing) {
-        model.update(entry);
+
+      if (draftModel.isEditing) {
+        await draftModel.update(entry);
       } else {
-        model.add(entry);
+        await draftModel.add(entry);
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Saved')));
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Saved')));
       _formKey.currentState?.reset();
       _loadData(null);
     }
@@ -75,8 +78,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DraftsViewModel, ThemeViewModel>(
-      builder: (ctx, draftsModel, themeModel, _) {
+    return Consumer2<DraftViewModel, HomeViewModel>(
+      builder: (ctx, draftsModel, homeModel, _) {
         if (draftsModel.isEditing && _currentData != draftsModel.editingData) {
           _currentData = draftsModel.editingData;
           _loadData(_currentData);
@@ -90,9 +93,9 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Home'),
             actions: [
               Switch(
-                value: themeModel.isDark,
+                value: homeModel.isDark,
                 onChanged: (_) {
-                  themeModel.toggle();
+                  homeModel.toggleTheme();
                 },
               ),
             ],

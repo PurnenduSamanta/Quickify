@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/drafts_viewmodel.dart';
+import '../viewmodels/draft_viewmodel.dart';
+import '../data/app_database.dart';
 
 class DraftPage extends StatelessWidget {
   final VoidCallback onEdit;
@@ -12,9 +13,9 @@ class DraftPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DraftsViewModel>(
+    return Consumer<DraftViewModel>(
       builder: (ctx, model, _) {
-        final drafts = model.drafts;
+        final List<Draft> drafts = model.drafts;
         if (drafts.isEmpty) {
           return const Center(child: Text('No drafts'));
         }
