@@ -16,5 +16,8 @@ class DraftDao extends DatabaseAccessor<AppDatabase> with _$DraftDaoMixin {
 
   Future<void> updateDraft(Draft d) => update(drafts).replace(d);
 
+  Future<Draft?> getById(String id) =>
+      (select(drafts)..where((t) => t.id.equals(id))).getSingleOrNull();
+
   Future<void> deleteDraft(String id) => (delete(drafts)..where((t) => t.id.equals(id))).go();
 }

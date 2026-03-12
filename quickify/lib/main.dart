@@ -22,7 +22,7 @@ void main() async {
       providers: [
         Provider(create: (_) => db),
         ChangeNotifierProvider(create: (_) => HomeViewModel(db)),
-        ChangeNotifierProvider(create: (_) => DraftViewModel(db)),
+        ChangeNotifierProvider(create: (_) => DraftViewModel()),
       ],
       child: const MyApp(),
     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home_page.dart';
 import 'draft_page.dart';
+import '../data/app_database.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,16 +13,25 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  Draft? _draftToEdit;
 
-  void _switchToHome() {
+  void _switchToHomeForEdit(Draft draft) {
     setState(() {
       _currentIndex = 0;
+      _draftToEdit = draft;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final pages = <Widget>[const HomePage(), DraftPage(onEdit: _switchToHome)];
+    final pages = <Widget>[
+      HomePage(draftToEdit: _draftToEdit, onEditComplete: () {
+        setState(() {
+          _draftToEdit = null;
+        });
+      }), 
+      DraftPage(onEdit: _switchToHomeForEdit)
+    ];
 
     return Scaffold(
       body: pages[_currentIndex],

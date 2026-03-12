@@ -9,7 +9,10 @@ import '../viewmodels/draft_viewmodel.dart';
 import '../viewmodels/home_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final Draft? draftToEdit;
+  final VoidCallback? onEditComplete;
+
+  const HomePage({super.key, this.draftToEdit, this.onEditComplete});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,6 +40,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @override
+  void didUpdateWidget(HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.draftToEdit != oldWidget.draftToEdit) {
+      _currentData = widget.draftToEdit;
+      _loadData(_currentData);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _currentData = widget.draftToEdit;
+    _loadData(_currentData);
+  }
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
@@ -51,8 +70,9 @@ class _HomePageState extends State<HomePage> {
     if (_formKey.currentState?.validate() ?? false) {
       final draftModel = Provider.of<DraftViewModel>(context, listen: false);
 
-      final id = draftModel.isEditing
-          ? draftModel.editingData!.id
+      final isUpdate = _currentData != null;
+      final id = isUpdate
+          ? _currentData!.id
           : DateTime.now().toIso8601String();
       final entry = Draft(
         id: id,
@@ -62,11 +82,7 @@ class _HomePageState extends State<HomePage> {
         imagePath: _imagePath,
       );
 
-      if (draftModel.isEditing) {
-        await draftModel.update(entry);
-      } else {
-        await draftModel.add(entry);
-      }
+      await draftModel.add(entry, isUpdate: isUpdate);
 
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -74,21 +90,16 @@ class _HomePageState extends State<HomePage> {
       ).showSnackBar(const SnackBar(content: Text('Saved')));
       _formKey.currentState?.reset();
       _loadData(null);
+      if (widget.onEditComplete != null) {
+        widget.onEditComplete!();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DraftViewModel, HomeViewModel>(
-      builder: (ctx, draftsModel, homeModel, _) {
-        if (draftsModel.isEditing && _currentData != draftsModel.editingData) {
-          _currentData = draftsModel.editingData;
-          _loadData(_currentData);
-        } else if (!draftsModel.isEditing && _currentData != null) {
-          _currentData = null;
-          _loadData(null);
-        }
-
+    return Consumer<HomeViewModel>(
+      builder: (ctx, homeModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Home'),
