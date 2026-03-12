@@ -7,7 +7,7 @@ import '../viewmodels/draft_viewmodel.dart';
 import '../data/app_database.dart';
 
 class DraftPage extends StatelessWidget {
-  final VoidCallback onEdit;
+  final void Function(Draft) onEdit;
 
   const DraftPage({super.key, required this.onEdit});
 
@@ -49,8 +49,7 @@ class DraftPage extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
-                          model.startEditing(entry.id);
-                          onEdit();
+                          onEdit(entry);
                         },
                       ),
                       IconButton(

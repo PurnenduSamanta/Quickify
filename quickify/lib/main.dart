@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'views/main_screen.dart';
 import 'viewmodels/home_viewmodel.dart';
@@ -16,12 +17,14 @@ void main() async {
   ]);
 
   final db = AppDatabase();
+  final prefs = await SharedPreferences.getInstance();
+  final isDark = prefs.getBool('isDarkMode') ?? false;
 
   runApp(
     MultiProvider(
       providers: [
         Provider(create: (_) => db),
-        ChangeNotifierProvider(create: (_) => HomeViewModel(db)),
+        ChangeNotifierProvider(create: (_) => HomeViewModel(initialDarkMode: isDark)),
         ChangeNotifierProvider(create: (_) => DraftViewModel()),
       ],
       child: const MyApp(),
